@@ -6,15 +6,23 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -30,12 +38,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             DataMahasiswaTheme {
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    Greeting(
-//                        name = "Android",
-//                        modifier = Modifier.padding(innerPadding)
-//                    )
-//                }
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    topBar = { MahasiswaTopAppBar()}
+                    ) { innerPadding ->
+                    MahasiswaApp(
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                }
             }
         }
     }
@@ -63,10 +73,51 @@ fun Mahasiswacard(mahasiswa: Mahasiswa, modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+fun MahasiswaApp(modifier: Modifier = Modifier) {
+    MahasiswaList(
+        mahasiswaList = MahasiswaSource().loadMahasiswa(),
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MahasiswaTopAppBar(modifier: Modifier = Modifier) {
+    CenterAlignedTopAppBar(
+        title = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.ic_mahasiswa),
+                    contentDescription = null
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(stringResource(R.string.app_name))
+            }
+        },
+        modifier = modifier
+    )
+}
+
+@Composable
+fun MahasiswaList(mahasiswaList: List<Mahasiswa>, modifier: Modifier = Modifier) {
+    LazyColumn(modifier = modifier) {
+        items(mahasiswaList) { mahasiswa ->
+            Mahasiswacard(
+                mahasiswa = mahasiswa,
+                modifier = Modifier.padding(8.dp)
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     DataMahasiswaTheme {
-        Mahasiswacard(Mahasiswa(R.string.Adhyan, R.drawable.wanita))
+ //       Mahasiswacard(Mahasiswa(R.string.Adhyan, R.drawable.wanita))
+        MahasiswaTopAppBar()
     }
 }
