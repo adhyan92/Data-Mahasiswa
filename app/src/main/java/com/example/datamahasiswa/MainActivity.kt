@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,14 +61,14 @@ fun Mahasiswacard(mahasiswa: Mahasiswa, modifier: Modifier = Modifier) {
                 contentDescription = stringResource(mahasiswa.nameResourceId),
                 modifier = modifier
                     .fillMaxWidth()
-                    .height(194.dp),
+                    .height(dimensionResource(R.dimen.height_image)),
                 contentScale = ContentScale.Crop
 
             )
             Text(
                 text = stringResource(mahasiswa.nameResourceId),
-                modifier = Modifier.padding(16.dp),
-                style = MaterialTheme.typography.headlineSmall
+                modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),
+                style = MaterialTheme.typography.displaySmall
             )
         }
     }
@@ -93,8 +94,10 @@ fun MahasiswaTopAppBar(modifier: Modifier = Modifier) {
                     painter = painterResource(R.drawable.ic_mahasiswa),
                     contentDescription = null
                 )
-                Spacer(Modifier.width(8.dp))
-                Text(stringResource(R.string.app_name))
+                Spacer(Modifier.width(dimensionResource(R.dimen.padding_small)))
+                Text(
+                    stringResource(R.string.app_name),
+                    style = MaterialTheme.typography.displayLarge)
             }
         },
         modifier = modifier
@@ -107,16 +110,19 @@ fun MahasiswaList(mahasiswaList: List<Mahasiswa>, modifier: Modifier = Modifier)
         items(mahasiswaList) { mahasiswa ->
             Mahasiswacard(
                 mahasiswa = mahasiswa,
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(dimensionResource(R.dimen.padding_small))
             )
         }
     }
 }
 
+
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    DataMahasiswaTheme {
+    DataMahasiswaTheme (darkTheme = true){
+        MahasiswaApp()
  //       Mahasiswacard(Mahasiswa(R.string.Adhyan, R.drawable.wanita))
         MahasiswaTopAppBar()
     }
