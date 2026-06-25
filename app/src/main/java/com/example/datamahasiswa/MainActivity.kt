@@ -1,9 +1,14 @@
 package com.example.datamahasiswa
 
+import android.graphics.drawable.Icon
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.StringRes
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,15 +20,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -32,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.datamahasiswa.model.Mahasiswa
 import com.example.datamahasiswa.ui.theme.DataMahasiswaTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,9 +69,34 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
+fun MahasiswaDetail(
+    @StringRes mahasiswaEmail: Int,
+    modifier: Modifier = Modifier
+){
+    Column(modifier = Modifier){
+        Text(
+            text = stringResource(R.string.email_text),
+            style = MaterialTheme.typography.labelSmall,
+        )
+        Text(
+            text = stringResource(mahasiswaEmail),
+            style = MaterialTheme.typography.bodyLarge
+        )
+    }
+}
+
+@Composable
 fun Mahasiswacard(mahasiswa: Mahasiswa, modifier: Modifier = Modifier) {
+    var expended by remember { mutableStateOf(false) }
     Card {
-        Column {
+        Column(
+            modifier = Modifier.animateContentSize(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioNoBouncy,
+                    stiffness = Spring.StiffnessMedium
+                )
+            )
+        ){
             Image(
                 painter = painterResource(mahasiswa.imageResourceId),
                 contentDescription = stringResource(mahasiswa.nameResourceId),
@@ -65,11 +106,28 @@ fun Mahasiswacard(mahasiswa: Mahasiswa, modifier: Modifier = Modifier) {
                 contentScale = ContentScale.Crop
 
             )
-            Text(
-                text = stringResource(mahasiswa.nameResourceId),
-                modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),
-                style = MaterialTheme.typography.displaySmall
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(R.dimen.padding_small))
+            ){
+                Text(
+                    text = stringResource(mahasiswa.nameResourceId),
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),
+                    style = MaterialTheme.typography.displaySmall
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                MahasiswaItemButton(
+                    expended = expended,
+                    onClick = { expended = !expended }
+                )
+            }
+            if (expended){
+                MahasiswaDetail(
+                    mahasiswa.emailResourceId,
+                    modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))
+                )
+            }
         }
     }
 }
@@ -116,7 +174,23 @@ fun MahasiswaList(mahasiswaList: List<Mahasiswa>, modifier: Modifier = Modifier)
     }
 }
 
-
+@Composable
+fun MahasiswaItemButton(
+    expended: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+){
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier
+    ){
+        Icon(
+            imageVector = if (expended)Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.secondary
+        )
+    }
+}
 
 @Preview(showBackground = true)
 @Composable

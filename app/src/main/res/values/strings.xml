@@ -1,8 +1,14 @@
 <resources>
     <string name="app_name">Data Mahasiswa</string>
-    <string name="Adhyan">Mahasiswa</string>
-    <string name="Katon">Mahasiswa</string>
-    <string name="Tino">Mahasiswa</string>
-    <string name="Alif">Mahasiswa</string>
-    <string name="Tom">Mahasiswa</string>
+    <string name="Adhyan">Mahasiswa 1</string>
+    <string name="Katon">Mahasiswa 2</string>
+    <string name="Tino">Mahasiswa 3</string>
+    <string name="Alif">Mahasiswa 4</string>
+    <string name="Tom">Mahasiswa 5</string>
+    <string name="email_Adhyan">Mahasiswa1@example.com</string>
+    <string name="email_Katon">Mahasiswa2@example.com</string>
+    <string name="email_Tino">Mahasiswa3@example.com</string>
+    <string name="email_Alif">Mahasiswa4@example.com</string>
+    <string name="email_Tom">Mahasiswa5@example.com</string>
+    <string name="email_text">Email</string>
 </resources>
